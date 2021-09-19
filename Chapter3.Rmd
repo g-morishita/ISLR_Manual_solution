@@ -90,7 +90,7 @@ R^2 &= \frac{\sum x_iy_i}{\sum x_i^2 \sum y_i^2}
 \end{aligned}
 $$
 
-## Applied
+# Applied
 
 Set up
 ```{r}
@@ -98,7 +98,7 @@ library(ISLR)
 library(ggplot2)
 ```
 
-### 8
+## 8
 __(a)__
 
 ```{r}
@@ -106,16 +106,16 @@ lm.fit <- lm(mpg ~ horsepower, data = Auto)
 summary(lm.fit)
 ```
 
-#### (i)
+### (i)
 The p-value for horsepower is very low, so we can say that there is a (negative) relationship between the predictor and the response.
 
-#### (ii)
+### (ii)
 The $R^2$ statistic is 0.6059, so the relationship is moderately strong.
 
-#### (iii)
+### (iii)
 Negative.
 
-#### (iv)
+### (iv)
 ```{r}
 predict(lm.fit, data.frame(horsepower = c(98)), interval = 'confidence')
 ```
@@ -144,7 +144,7 @@ plot(lm.fit)
 * In Residuals vs Fitted plot, we can see the U-shape curve, which indicates the data has non-linearity.
 * In Scale-location, we can see that the assumption that variance is constant through examples is liked to be violated.
 
-### 9
+## 9
 
 __(a)__
 
@@ -200,7 +200,7 @@ plot(lm.fit2)
 * In scale-Location plot, it looks like the variance is constant.
 
 
-### 10
+## 10
 
 __(a)__
 ```{r}
@@ -254,8 +254,7 @@ plot(hatvalues(small.fit))
 The average leverage for all the observations is always $(p+1) / n$. In this case, $3 / 400 = 0.075$. So, an observation with higher leverage statistic than 0.075 might be a high leverage observation.
 There is an observation with leverage statistic of around 0.04. Hence, we can say that there is a high leverage observation.
 
-
-### 11
+## 11
 
 ```{r}
 set.seed(1)
@@ -320,6 +319,178 @@ summary(lm.fit2)
 lm.fit3 <- lm(x ~ y)
 summary(lm.fit3)
 ```
+
+## 12
+
+__(a)__
+If $\sum x_i^2 = \sum y_i^2$, the estimated coefficient is the same.
+
+__(b)__
+```{r}
+n <- 100
+set.seed(1)
+x <- rnorm(100)
+y <- 3 * x + rnorm(100, 0, 0.1)
+```
+
+```{r}
+lm.fit <- lm(y ~ x -1)
+coef(lm.fit)
+```
+
+```{r}
+lm.fit2 <- lm(x ~ y - 1)
+coef(lm.fit2)
+```
+
+__(c)__
+
+```{r}
+set.seed(1)
+x <- rnorm(100)
+y <- sample(x, 100)
+```
+
+```{r}
+lm.fit <- lm(y ~ x - 1)
+coef(lm.fit)
+```
+
+```{r}
+lm.fit2 <- lm(y ~ x - 1)
+coef(lm.fit2)
+```
+
+
+## 13
+
+```{r}
+set.seed(1)
+```
+
+__(a)__
+
+```{r}
+x <- rnorm(100)
+```
+
+__(b)__
+
+```{r}
+eps <- rnorm(100, 0, 0.25)
+```
+
+__(c)__
+
+```{r}
+y <- -1 + 0.5 * x + eps
+```
+
+__(d)__
+
+```{r}
+ggplot(mapping = aes(x = x, y = y)) + 
+  geom_point()
+```
+
+There is a linear relationship between y and x.
+
+__(e)__
+
+```{r}
+lm.fit <- lm(y ~ x)
+summary(lm.fit)
+```
+
+Estimated coefficients are very close to the true ones.
+
+__(f)__
+
+```{r}
+ggplot() + 
+  geom_point(mapping = aes(x = x, y = y)) +
+  geom_abline(slope = 0.5, intercept = -1, show.legend =  TRUE) +
+  geom_smooth(mapping = aes(x = x, y = y), method = 'lm', formula = y ~ x, color = "blue", se = FALSE)
+```
+
+__(g)__
+
+```{r}
+lm.fit2 <- lm(y ~ poly(x, 2))
+summary(lm.fit2)
+```
+
+```{r}
+ggplot() + 
+  geom_point(mapping = aes(x = x, y = y)) +
+  geom_abline(slope = 0.5, intercept = -1, show.legend =  TRUE) +
+  geom_smooth(mapping = aes(x = x, y = y), method = 'lm', formula = y ~ x + I(x^2), color = "blue", se = FALSE)
+```
+
+Looking at the graph, the previous model looks better, but looking at the summary info. the quadratic model looks better because the $X^2$ coefficient has low p-value and adjusted $R^2$ statistic is higher than the previous model. 
+
+__(h)__
+
+```{r}
+for (s in c(0.20, 0.15, 0.10, 0.05, 0.01)) {
+  set.seed(1)
+  x <- rnorm(100)
+  eps <- rnorm(100, 0, s)
+  y <- -1 + 0.5 * x + eps
+  lm.fit <- lm(y ~ x)
+  print(summary(lm.fit))
+}
+```
+
+When the noise gets smaller, the model fitting gets better.
+The estimated standard errors of the coefficients get smaller, too.
+
+__(i)__
+
+```{r}
+for (s in c(0.25, 0.30, 0.35, 0.40, 0.45)) {
+  set.seed(1)
+  x <- rnorm(100)
+  eps <- rnorm(100, 0, s)
+  y <- -1 + 0.5 * x + eps
+  lm.fit <- lm(y ~ x)
+  print(summary(lm.fit))
+}
+```
+
+The fitting gets worse when the noise gets bigger.
+
+__(j)__
+
+```{r}
+x <- rnorm(100)
+eps <- rnorm(100, 0, 0.25)
+y <- -1 + 0.5 * x + eps
+lm.fit <- lm(y ~ x)
+confint(lm.fit)
+```
+
+```{r}
+x <- rnorm(100)
+eps <- rnorm(100, 0, 0.05)
+y <- -1 + 0.5 * x + eps
+lm.fit <- lm(y ~ x)
+confint(lm.fit)
+```
+
+```{r}
+x <- rnorm(100)
+eps <- rnorm(100, 0, 0.5)
+y <- -1 + 0.5 * x + eps
+lm.fit <- lm(y ~ x)
+confint(lm.fit)
+```
+
+
+
+
+
+
 
 
 
