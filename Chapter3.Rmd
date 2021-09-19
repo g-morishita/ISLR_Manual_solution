@@ -1,0 +1,260 @@
+---
+title: "Manual_Solution_Exercise3"
+author: "Gota Morishita"
+date: "9/16/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Cenceptual
+
+## 1
+The null hypothese corresponding to TABLE 3.4 are 
+
+* TV advertisement has no association with sales.
+* radio advertisement has no association with sales.
+* newspaper advertisement has no association with sales.
+
+Looking at TABLE 3.4, TV and radio has low p-values, so TV and radio have nonnegligible association with sales. On the other hand, newspaper does not association with sales.
+
+## 2
+KNN classifier is used for classification problem as you can guess from its name. The way to do that is to gather $K$ points closest to a point you want to estimate and assign the point to the most common class among the $K$ nearest points.
+
+On the other hand, KNN regressoin is used for regression problem. The estimation procedure is similar to KNN classifier. First, gather $K$ points closest to a point you want to estimate and assign the estimated point to averaged values of $K$ observed response variables.
+
+## 3
+The linear model is as follows:
+
+$$
+salary = 50 + 20 \times GPA + 0.07 \times IQ + 35 \times Gender + 0.01 \times GPA \times IQ - 10 \times GPA \times Gender
+$$
+
+### (a)
+The correct answer is (iii).
+
+With IQ and GPA fixed, $salary = (35 - 10 \times GPA) \times Gender + const.$. When GPA is high enough, the coefficient of Gender is negative, so males earn more money than female since the coding of Gender is 1 for female and 0 for male.
+
+### (b)
+
+Substituting 1, 110 and 4 for Gender, IQ, and GPA, we have $salary = 50 + 80 + 7.7 + 35 + 4.4 - 40 = 137.1$
+
+### (c)
+False. Small value of a coefficient does not mean little evidence of an effect while small p-value does.
+
+## 4
+
+### (a)
+We expect the cubic regression to have lower training RSS because there is a noise when you observe the data and the cubic regression is more complex, thus fitting the training data better than the linear regression.
+
+### (b)
+We expect the linear regression to have lower test RSS. The cubic regression tends to fit the observed data too well to generalize. 
+
+### (c)
+The linear regression is a submodel of the cubic regression. Therefore, the training RSS of the cubic regression is always smaller than that of the linear regression.
+
+### (d)
+There is not enough information to tell which model has lower training RSS. It depends on the true model generating the data.
+
+## 5
+
+$$
+a_{i'} = \frac{x_{i'}x_i}{\sum_kx_k^2}
+$$
+
+## 6
+From (3.4), we have $\bar{y} = \hat{\beta}_0 + \hat{\beta}_1\bar{x}$, which completes the proof.
+
+## 7
+
+Assume that $\bar{y} = \bar{x} = 0$.
+
+$$ \begin{aligned} RSS &= \sum_{i=1}^{n} \ (y_i-\hat{y}_{i})^2 \\  TSS &= \sum_{i=1}^{n} \ y_i^2\end{aligned}$$
+Our aim is to show that $R^2 = Cor(X,Y)^2$
+
+$$ 
+\begin{aligned} R^2 &= 1 - RSS/TSS \\
+  &= 1 - \frac{\sum(y_i -\hat{y}_{i})^2}{\sum(y_i)^2} \\
+  \hat{y}_{i} &= \hat{\beta_1}x_i \\
+  &= \frac{\sum x_iy_i}{\sum x_i^2}
+\end{aligned}
+$$
+
+Substituting $\hat{y_i}$, we have 
+
+$$
+\begin{aligned} 
+R^2 &= \frac{\sum x_iy_i}{\sum x_i^2 \sum y_i^2}
+\end{aligned}
+$$
+
+## Applied
+
+Set up
+```{r}
+library(ISLR)
+library(ggplot2)
+```
+
+### 8
+__(a)__
+
+```{r}
+lm.fit <- lm(mpg ~ horsepower, data = Auto)
+summary(lm.fit)
+```
+
+#### (i)
+The p-value for horsepower is very low, so we can say that there is a (negative) relationship between the predictor and the response.
+
+#### (ii)
+The $R^2$ statistic is 0.6059, so the relationship is moderately strong.
+
+#### (iii)
+Negative.
+
+#### (iv)
+```{r}
+predict(lm.fit, data.frame(horsepower = c(98)), interval = 'confidence')
+```
+
+```{r}
+predict(lm.fit, data.frame(horsepower = c(98)), interval = 'prediction')
+```
+
+
+__(b)__
+
+```{r}
+ggplot(data = Auto) + 
+  geom_point(mapping = aes(x = horsepower, y = mpg)) +
+  geom_smooth(mapping = aes(x = horsepower, y = mpg), method = "lm", formula = y ~ x, se=FALSE)
+```
+
+
+__(c)__
+```{r}
+par(mfrow=c(2,2))
+plot(lm.fit)
+```
+
+
+* In Residuals vs Fitted plot, we can see the U-shape curve, which indicates the data has non-linearity.
+* In Scale-location, we can see that the assumption that variance is constant through examples is liked to be violated.
+
+### 9
+
+__(a)__
+
+```{r}
+plot(Auto)
+```
+
+__(b)__
+
+```{r}
+cor(subset(Auto, select = -name))
+```
+
+__(c)__
+
+```{r}
+lm.fit <- lm(mpg ~ .-name, data = Auto)
+summary(lm.fit)
+```
+
+* Looking at F-statistics, there is a relationship between the predictors and the response.
+* R^2 statistics is 0.8215, so the linear model explains the relationship.
+* displacement, weight, year, and origin have a statistically significant relationship to the response.
+* the positive coefficient of `year` variable suggests newer cars are more effective.
+
+__(d)__
+```{r}
+par(mfrow = c(2, 2))
+plot(lm.fit)
+```
+
+* In Residuals vs Fitted, you can see a slight non-linear trend.
+* There is an observation with high leverage.
+
+__(e)__
+```{r}
+
+```
+
+__(f)__
+We applied $X^2$ transformations to the four predictors.
+```{r}
+lm.fit2 <- lm(mpg ~ origin + I(origin^2) + year + I(year^2) + weight + I(weight^2) + horsepower + I(horsepower^2), data = Auto)
+summary(lm.fit2)
+```
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm.fit2)
+```
+* We have higher R^2 Statistic even though some predictors are discarded.
+* In Residuals vs Fitted values plot, the non-linear trend is gone.
+* In scale-Location plot, it looks like the variance is constant.
+
+
+### 10
+
+__(a)__
+```{r}
+lm.fit <- lm(Sales ~ Price + Urban + US, data = Carseats)
+```
+
+__(b)__
+```{r}
+summary(lm.fit)
+```
+
+Looking at the p-values of the coefficients, whether a store is in an urban location or not does not have an effect on sales while whether a store is in the U.S. or not and the price have association with the sales.
+If the price goes up, the sales go down. 
+If a store is in the U.S., the sales go up.
+
+__(c)__
+
+$$
+Sales = 13.043469 - 0.054459 * Price - -0.02191 * UrbanYes + 1.200573 * USYes
+$$
+
+__(d)__
+Price and US
+
+__(e)__
+```{r}
+small.fit <- lm(Sales ~ Price + US, data = Carseats)
+summary(small.fit)
+```
+
+__(f)__
+
+The smaller model has higher adjusted $R^2$ statistic, so the smaller one fits to the data better.
+
+__(g)__
+```{r}
+confint(small.fit)
+```
+
+__(h)__
+```{r}
+plot(predict(small.fit), rstudent(small.fit))
+```
+
+Studentized residuals of all observations are between -3 and 3. Hence, there is no evidence that there is an outlier.
+
+```{r}
+plot(hatvalues(small.fit))
+```
+
+The average leverage for all the observations is always $(p+1) / n$. In this case, $3 / 400 = 0.075$. So, an observation with higher leverage statistic than 0.075 might be a high leverage observation.
+There is an observation with leverage statistic of around 0.04. Hence, we can say that there is a high leverage observation.
+
+
+
+
+
