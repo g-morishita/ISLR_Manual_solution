@@ -255,6 +255,74 @@ The average leverage for all the observations is always $(p+1) / n$. In this cas
 There is an observation with leverage statistic of around 0.04. Hence, we can say that there is a high leverage observation.
 
 
+### 11
+
+```{r}
+set.seed(1)
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+```
+
+
+__(a)__
+
+```{r}
+lm.fit <- lm(y ~ x - 1)
+summary(lm.fit)
+```
+
+The t-statistic of the coefficient is so high (the p-value is so low) that the null hypothesis that the coefficient is zero.
+
+__(b)__
+```{r}
+lm.fit2 <- lm(x ~ y - 1)
+summary(lm.fit2)
+```
+
+The t-statistc and p-value is identical to the regression of $Y$ on $X$.
+
+__(d)__
+
+The model is 
+
+$$
+y = \beta x + \epsilon \quad \epsilon \sim \mathcal{N}(0, \sigma)
+$$
+
+$\widehat{\beta} = \frac{\sum x_i y_i}{\sum x_i^2}$, so
+
+$$
+Var[\widehat{\beta}] = \frac{\sum x_i^2 \sigma^2}{\big(\sum x_i^2\big)} = \frac{\sigma^2}{\sum x_i^2}
+$$
+
+$\widehat{\sigma} = \frac{RSS}{n-1} = \frac{\sum \big(y_i - \widehat{\beta}x_i\big)}{n-1}$.
+
+Therefore, $SE[\beta] = \sqrt{\frac{\sum \big(y_i - \widehat{\beta}x_i\big)}{(n-1)\big(\sum x_i^2 \big)}}$.
+
+Next, we calculate the t-statistic $\widehat{\beta}/SE[\widehat{\beta}]$. Substituting $\widehat{\beta}$ and $E[\widehat{\beta}]$ with the above and simplifying, we have the answer.
+
+```{r}
+t <- sqrt(length(x) - 1) * sum(x * y) / sqrt(sum(x * x) * sum(y * y) - sum(x * y) ** 2)
+print(t)
+```
+
+__(e)__
+The t-statistic is symmetric, so the t-statistic of the regression of $Y$ on $X$ is the same as that of the regression of $X$ on $Y$.
+
+__(f)__
+
+```{r}
+lm.fit2 <- lm(y ~ x)
+summary(lm.fit2)
+```
+
+```{r}
+lm.fit3 <- lm(x ~ y)
+summary(lm.fit3)
+```
+
+
+
 
 
 
