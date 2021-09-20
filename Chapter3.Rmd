@@ -594,6 +594,173 @@ In the second model, it is considered an outlier.
 
 __(a)__
 
+```{r}
+library(MASS)
+attach(Boston)
+print(names(Boston))
+```
+
+### zn
+```{r}
+lm.zn <- lm(crim ~ zn)
+summary(lm.zn)
+```
+
+Yes.
+
+### indus
+```{r}
+lm.indus <- lm(crim ~ indus)
+summary(lm.indus)
+```
+
+Yes.
+
+### chas
+```{r}
+lm.chas <- lm(crim ~ chas)
+summary(lm.chas)
+```
+
+No
+
+### nox
+```{r}
+lm.nox <- lm(crim ~ nox)
+summary(lm.nox)
+```
+
+Yes
+
+### rm
+```{r}
+lm.rm <- lm(crim ~ rm)
+summary(lm.rm)
+```
+
+Yes.
+
+### age
+```{r}
+lm.age <- lm(crim ~ age)
+summary(lm.age)
+```
+
+Yes.
+
+### dis
+```{r}
+lm.dis <- lm(crim ~ dis)
+summary(lm.dis)
+```
+
+Yes.
+
+### rad
+```{r}
+lm.rad <- lm(crim ~ rad)
+summary(lm.rad)
+```
+
+Yes.
+
+### tax
+```{r}
+lm.tax <- lm(crim ~ tax)
+summary(lm.tax)
+```
+
+Yes
+
+### ptratio
+```{r}
+lm.ptratio <- lm(crim ~ ptratio)
+summary(lm.ptratio)
+```
+
+### black
+```{r}
+lm.black <- lm(crim ~ black)
+summary(lm.black)
+```
+
+Yes.
+
+### lstat
+```{r}
+lm.lstat <- lm(crim ~ lstat)
+summary(lm.lstat)
+```
+
+Yes.
+
+### medv
+```{r}
+lm.medv <- lm(crim ~ medv)
+summary(lm.medv)
+```
+
+Yes.
+
+All but chas are associated with the response. You can see why by looking at the correlation. The relationship between chas and crime is weak compared to the other predictors.
+
+```{r}
+cor(Boston)
+```
+
+__(b)__
+```{r}
+lm.all <- lm(crim ~ ., data = Boston)
+summary(lm.all)
+```
+
+It depends on the significance level which predictor is statistically significant, but we can say dis, rad and medv are statistically significant.
+
+__(c)__
+
+```{r}
+x = c(coefficients(lm.zn)[2],
+      coefficients(lm.indus)[2],
+      coefficients(lm.chas)[2],
+      coefficients(lm.nox)[2],
+      coefficients(lm.rm)[2],
+      coefficients(lm.age)[2],
+      coefficients(lm.dis)[2],
+      coefficients(lm.rad)[2],
+      coefficients(lm.tax)[2],
+      coefficients(lm.ptratio)[2],
+      coefficients(lm.black)[2],
+      coefficients(lm.lstat)[2],
+      coefficients(lm.medv)[2])
+y = coefficients(lm.all)[2:14]
+plot(x, y)
+```
+
+__(d)__
+
+Omitted. Looking at the Residual vs Fitted plot, you can see if there is a non-linear trend.
+
+```{r}
+plot(lm.medv)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
