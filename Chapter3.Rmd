@@ -486,12 +486,113 @@ lm.fit <- lm(y ~ x)
 confint(lm.fit)
 ```
 
+## 14
+
+__(a)__
+
+```{r}
+set.seed(1)
+x1 <- runif(100)
+x2 <- 0.5 * x1 + rnorm(100, 0, 0.1)
+y <- 2 + 2 * x1 + 0.3 *x2 + rnorm(100)
+```
+
+$$
+Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \epsilon,
+$$
+where $\beta_0 = 2, \beta_1 = 2, \beta_2 = 0.3$.
+
+__(b)__
+
+```{r}
+ggplot() +
+  geom_point(mapping = aes(x = x1, y = x2))
+```
+
+__(c)__
+```{r}
+lm.fit <- lm(y ~ x1 + x2)
+summary(lm.fit)
+```
+
+The estimated intercept $\beta_0$ is close to the true one, but the coefficients $\beta_1, \beta_2$ are not so close. Also, the standard errors are so high that the p-values are not high, especially for the second coefficient $\beta_2$.
+
+The null hypothesis $\beta_1 = 0$ can be rejected but the null hypothesis $\beta_2$ cannot be rejected.
+
+__(d)__
+
+```{r}
+lm.fit2 <- lm(y ~ x1)
+summary(lm.fit2)
+```
+
+The s.e. significantly decreases, so that the null hypothesis can be rejected.
+
+__(e)__
+```{r}
+lm.fit3 <- lm(y ~ x2)
+summary(lm.fit3)
+```
+
+The same for the previous question.
+
+__(f)__
+No, they don't. $X_1$ and $X_2$ are strongly correlated, so the standard errors blow up. If one of them is removed, collinearity is gone. Then, the standard error becomes small and the null hypothesis can be rejected.
+
+__(g)__
+
+```{r}
+x1 <- c(x1, 0.1)
+x2 <- c(x2, 0.8)
+y <- c(y, 6)
+lm.fit4 <- lm(y ~ x1 + x2)
+summary(lm.fit4)
+```
+
+```{r}
+lm.fit5 <- lm(y ~ x1)
+summary(lm.fit5)
+```
+
+```{r}
+lm.fit6 <- lm(y ~ x2)
+summary(lm.fit6)
+```
+
+In the full model, the coefficient of $X_1$ is not statistically significant anymore. Instead $X_2$ is significant.
+
+```{r}
+plot(hatvalues(lm.fit4))
+```
+
+```{r}
+plot(hatvalues(lm.fit5))
+```
+
+```{r}
+plot(hatvalues(lm.fit6))
+```
+
+The added observation has high leverage in the first and third model.
+
+```{r}
+rstudent(lm.fit4)[101]
+```
+
+```{r}
+rstudent(lm.fit5)[101]
+```
+
+```{r}
+rstudent(lm.fit6)[101]
+```
+
+In the second model, it is considered an outlier.
 
 
+## 15
 
-
-
-
+__(a)__
 
 
 
