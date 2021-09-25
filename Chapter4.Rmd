@@ -1,0 +1,152 @@
+---
+title: "Chapter4"
+author: "Gota Morishita"
+date: "9/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Conceptual
+
+## 1
+
+$$
+p(X) = \frac{e^{\beta_0 + \beta_1X}}{1 + e^{\beta_0 + \beta_1X}}.
+$$
+
+Letting $t = e^{\beta_0 + \beta_1X}$, we have $(1 + t)p(X) = t$. Solving it w.r.t $t$, we have
+
+$$
+e^{\beta_0 + \beta_1X} = t = \frac{p(X)}{1 - p(X)}.
+$$
+
+## 2 
+
+$$
+p_k(x) = \frac{\pi_k\frac{1}{\sqrt{2\pi}\sigma}\exp\big(-\frac{1}{2\sigma^2}(x - \mu_k)^2\big)}{\sum_{l=1}^K\pi_l\frac{1}{\sqrt{2\pi}\sigma}\exp\big(-\frac{1}{2\sigma^2}(x - \mu_l)^2\big)}
+$$
+
+Because $\log(x)$ increases in $x$, removing the common terms through $l=1, \dots, K$, $k$ that maximizes the above is the same as 
+
+$$
+\frac{x\mu_k}{\sigma^2} - \frac{\mu_k^2}{2\sigma^2} + \log \pi_k
+$$
+
+## 3
+
+Applying the same argument as LDA, we have
+
+$$
+\delta(x) = - \log\sigma_k - \frac{(x - \mu_k)^2}{2\sigma_k}.
+$$
+
+## 4
+__(a)__
+
+On average, $10\%$.
+
+__(b)__
+
+On average, $1\%$.
+
+__(c)__
+
+$(0.1)^{100} \times 100\%$.
+
+__(d)__
+
+As the number of features increases, the expected ratio of the available observations we use to make a prediction decreases exponentially.
+
+__(e)__
+The length of a side is $l$.
+
+When $p=1$, $10^{-1/1}$.
+
+When $p=2$, $10^{-1/2}$.
+
+When $p=100$, $10^{-1/100}$.
+
+## 5
+__(a)__
+
+On the training set, QDA performs better because the complexity of QDA is higher than that of LDA.
+On the test set, LDA performs better.
+
+__(b)__
+
+We expect QDA to perform better both on the training and test sets.
+
+__(c)__
+
+We expect the test prediction accuracy of QDA relative to LDA to improve. This is because in general, complex models yield a better result as sample size increases.
+
+__(d)__
+False.  
+
+## 6
+__(a)__
+$\frac{1}{1 + e^{-(-6 + 0.05 * 40 + 1 * 3.5)}} \approx 0.3775$.
+
+__(b)__
+
+Solving $\frac{1}{1 + e^{-(-6 + 0.05 * X_1 + 1 * 3.5)}} = 0.5$, we have
+
+$$
+X_1 = 50.
+$$
+
+Therefore, 50 hours is needed.
+
+## 7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
